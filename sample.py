@@ -6,7 +6,18 @@ file_path  = os.getcwd() + "/dailycheckins.csv"
 
 df =pd.read_csv(file_path)
 
-df['timestamp']= pd.to_datetime(df['timestamp'])
+for i, timestamp in enumerate(df['timestamp']):
+    if 'сентября' in timestamp:
+        timestamp = timestamp.replace('сентября', '09').strip()
+    try:
+        if '/' in timestamp:
+            dt = pd.to_datetime(timestamp, format='%m/%d/%Y %I:%M %p')
+            df.loc[i, 'timestamp'] = dt.strftime('%Y-%m-%d %H:%M:%S') + ' UTC'
+        elif ':' in timestamp:
+            dt = pd.to_datetime(timestamp, format='%d %m %Y %H:%M')
+            df.loc[i, 'timestamp'] = dt.tz_localize('UTC').strftime('%Y-%m-%d %H:%M:%S %Z')
+    except ValueError:
+        pass
 
 st.title("A Simple Streamlit Web App")
 name = st.text_input("Enter your name", '')
