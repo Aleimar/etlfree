@@ -1,16 +1,15 @@
-from pyspark.sql import SparkSession
+from pyspark import SparkContext
 import os
+from pyspark.sql.functions import col, date_format
 
 
 file_path  = os.getcwd() + "/dailycheckins.csv"
 
 print(file_path)
 
-spark = SparkSession.builder.appName("sparkTest").getOrCreate()
+spark = SparkContext(appName="testSpark")
 
 df = spark.read.option("header",True).csv(file_path)
-
-from pyspark.sql.functions import col, date_format
 df2 = df.withColumn(
   "date_column_formatted",  
   date_format(col("timestamp"), "yyyy-MM-dd HH:mm:ss")
