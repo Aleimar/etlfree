@@ -1,5 +1,12 @@
 import streamlit as st
 import pandas as pd
+import os
+
+file_path  = os.getcwd() + "/dailycheckins.csv"
+
+df =pd.read_csv(file_path)
+
+df['timestamp']= pd.to_datetime(df['timestamp'])
 
 st.title("A Simple Streamlit Web App")
 name = st.text_input("Enter your name", '')
